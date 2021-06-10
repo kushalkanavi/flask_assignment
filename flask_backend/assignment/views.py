@@ -8,8 +8,8 @@ class FlaskAssignment(Resource):
     def get(self):
         assignment = Assignment.query.all()
         for assignment in assignment:
-            print(assignment.__dict__)
-        return ({'About': 'You are in assignment get page'})
+            print(assignment)
+        return ({'About': 'You are in assignment get page'}), 400
     
     def post(self):
         req = request.json
