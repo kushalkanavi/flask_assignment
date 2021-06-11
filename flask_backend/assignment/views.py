@@ -6,10 +6,21 @@ from .models import Assignment, Tag, Assignment_Tag_Map, User
 
 class FlaskAssignment(Resource):
     def get(self):
-        assignment = Assignment.query.all()
-        for assignment in assignment:
-            print(assignment)
-        return ({'About': 'You are in assignment get page'}), 200
+        assignment_query = Assignment.query.all()
+        responce_dict = {}
+        data_list = []
+        for assignment in assignment_query:
+            data_list.append({'id': assignment.id,
+                    'name' : assignment.name,
+                    'title': assignment.title,
+                    'description': assignment.description,
+                    'type': assignment.type,
+                    'duration': assignment.duration
+                    })
+            responce_dict['data'] = data_list 
+            responce_dict['status'] = 200
+            responce_dict['message'] = 'Success'
+        return ({'responce': responce_dict}), 200
     
     def post(self):
         req = request.json
@@ -28,14 +39,29 @@ class FlaskAssignment(Resource):
 
         db.session.commit()
 
-        return ({'responce': 'All Okay'})
+        responce_dict = {}
+        responce_dict['status'] = 200
+        responce_dict['message'] = 'Success'
+        
+        return ({'responce': responce_dict}), 200
 
 class GetAssignmentByID(Resource):
     def get(self, id):
-        assignment = Assignment.query.filter_by(id=id).all()
-        for assignment in assignment:
-            print(assignment.__dict__)
-        return ({'About': 'Get Assignment By ID'})
+        assignment_query = Assignment.query.filter_by(id=id).all()
+        responce_dict = {}
+        data_list = []
+        for assignment in assignment_query:
+            data_list.append({'id': assignment.id,
+                    'name' : assignment.name,
+                    'title': assignment.title,
+                    'description': assignment.description,
+                    'type': assignment.type,
+                    'duration': assignment.duration
+                    })
+            responce_dict['data'] = data_list 
+            responce_dict['status'] = 200
+            responce_dict['message'] = 'Success'
+        return ({'responce': responce_dict}), 200
 
 class GetAssignmentByTag(Resource):
     def get(self):
@@ -50,7 +76,19 @@ class GetAssignmentByTag(Resource):
             map_query = Assignment_Tag_Map.query.filter_by(tag_id=tag).all()
         
         for map in map_query:
-            assignment = Assignment.query.filter_by(id=map.assignment_id).all()
-            print('Assignment : ', assignment)
-
-        return ({'About': 'Get Assignment By Tag'})
+            assignment_query = Assignment.query.filter_by(id=map.assignment_id).all()
+        
+        responce_dict = {}
+        data_list = []
+        for assignment in assignment_query:
+            data_list.append({'id': assignment.id,
+                    'name' : assignment.name,
+                    'title': assignment.title,
+                    'description': assignment.description,
+                    'type': assignment.type,
+                    'duration': assignment.duration
+                    })
+            responce_dict['data'] = data_list 
+            responce_dict['status'] = 200
+            responce_dict['message'] = 'Success'
+        return ({'responce': responce_dict}), 200
