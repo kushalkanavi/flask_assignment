@@ -14,6 +14,13 @@ To Install type this command.
 - pip install -r requirements.txt    
 ```
 
+## To create Tables
+``` In Terminal or command prompt
+- python3
+>>> from app import db
+>>> db.create_all()
+>>> exit()
+```
 
 ## For running Flask Server
 ```
