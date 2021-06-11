@@ -6,21 +6,30 @@ from .models import Assignment, Tag, Assignment_Tag_Map, User
 
 class FlaskAssignment(Resource):
     def get(self):
-        assignment_query = Assignment.query.all()
-        responce_dict = {}
-        data_list = []
-        for assignment in assignment_query:
-            data_list.append({'id': assignment.id,
-                    'name' : assignment.name,
-                    'title': assignment.title,
-                    'description': assignment.description,
-                    'type': assignment.type,
-                    'duration': assignment.duration
-                    })
-            responce_dict['data'] = data_list 
-            responce_dict['status'] = 200
-            responce_dict['message'] = 'Success'
-        return ({'responce': responce_dict}), 200
+        try:
+            assignment_query = Assignment.query.all()
+            responce_dict = {}
+            data_list = []
+            for assignment in assignment_query:
+                data_list.append({'id': assignment.id,
+                        'name' : assignment.name,
+                        'title': assignment.title,
+                        'description': assignment.description,
+                        'type': assignment.type,
+                        'duration': assignment.duration
+                        })
+                responce_dict['data'] = data_list 
+                responce_dict['status_code'] = 200
+                responce_dict['status'] = 'Success'
+            return ({'responce': responce_dict}), 200
+        
+        except:
+            responce_dict = {
+                'status_code': 500,
+                'status': 'Internal Server Error'
+            }
+            
+            return ({'responce': responce_dict}), 500
     
     def post(self):
         req = request.json
@@ -40,55 +49,93 @@ class FlaskAssignment(Resource):
         db.session.commit()
 
         responce_dict = {}
-        responce_dict['status'] = 200
-        responce_dict['message'] = 'Success'
+        responce_dict['status_code'] = 201
+        responce_dict['status'] = 'Created'
         
-        return ({'responce': responce_dict}), 200
+        return ({'responce': responce_dict}), 201
 
 class GetAssignmentByID(Resource):
     def get(self, id):
-        assignment_query = Assignment.query.filter_by(id=id).all()
-        responce_dict = {}
-        data_list = []
-        for assignment in assignment_query:
-            data_list.append({'id': assignment.id,
-                    'name' : assignment.name,
-                    'title': assignment.title,
-                    'description': assignment.description,
-                    'type': assignment.type,
-                    'duration': assignment.duration
-                    })
-            responce_dict['data'] = data_list 
-            responce_dict['status'] = 200
-            responce_dict['message'] = 'Success'
-        return ({'responce': responce_dict}), 200
+        try:
+            assignment_query = Assignment.query.filter_by(id=id).all()
+            responce_dict = {}
+            data_list = []
+            
+            if not assignment_query:
+                responce_dict = {
+                'status_code': 404,
+                'status': 'ID Not Found',
+                'message': 'Given Id is not found in database, Try some other ID'
+                }
+
+                return ({'responce': responce_dict}), 404
+
+            else:
+                for assignment in assignment_query:
+                    data_list.append({'id': assignment.id,
+                            'name' : assignment.name,
+                            'title': assignment.title,
+                            'description': assignment.description,
+                            'type': assignment.type,
+                            'duration': assignment.duration
+                            })
+                    responce_dict['data'] = data_list 
+                    responce_dict['status_code'] = 200
+                    responce_dict['status'] = 'Success'
+                return ({'responce': responce_dict}), 200
+        except:
+            responce_dict = {
+                'status_code': 500,
+                'status': 'Internal Server Error'
+            }
+            
+            return ({'responce': responce_dict}), 500
 
 class GetAssignmentByTag(Resource):
     def get(self):
         req = request.json
-        tag_query = Tag.query.filter_by(name=req['tag']).all()
+        try:
+            tag_query = Tag.query.filter_by(name=req['tag']).all()
 
-        tag_list = []
-        for tags in tag_query:
-            tag_list.append(tags.id)
+            if not tag_query:
+                responce_dict = {
+                'status_code': 404,
+                'status': 'Tag Not Found',
+                'message': 'Given Tag is not found in database, Try some other Tag. Type same name of tag as created'
+                }
+
+                return ({'responce': responce_dict}), 404
+            
+            else:
+                tag_list = []
+                for tags in tag_query:
+                    tag_list.append(tags.id)
+                
+                for tag in tag_list:
+                    map_query = Assignment_Tag_Map.query.filter_by(tag_id=tag).all()
+                
+                for map in map_query:
+                    assignment_query = Assignment.query.filter_by(id=map.assignment_id).all()
+                
+                responce_dict = {}
+                data_list = []
+                for assignment in assignment_query:
+                    data_list.append({'id': assignment.id,
+                            'name' : assignment.name,
+                            'title': assignment.title,
+                            'description': assignment.description,
+                            'type': assignment.type,
+                            'duration': assignment.duration
+                            })
+                    responce_dict['data'] = data_list 
+                    responce_dict['status_code'] = 200
+                    responce_dict['status'] = 'Success'
+                return ({'responce': responce_dict}), 200
         
-        for tag in tag_list:
-            map_query = Assignment_Tag_Map.query.filter_by(tag_id=tag).all()
-        
-        for map in map_query:
-            assignment_query = Assignment.query.filter_by(id=map.assignment_id).all()
-        
-        responce_dict = {}
-        data_list = []
-        for assignment in assignment_query:
-            data_list.append({'id': assignment.id,
-                    'name' : assignment.name,
-                    'title': assignment.title,
-                    'description': assignment.description,
-                    'type': assignment.type,
-                    'duration': assignment.duration
-                    })
-            responce_dict['data'] = data_list 
-            responce_dict['status'] = 200
-            responce_dict['message'] = 'Success'
-        return ({'responce': responce_dict}), 200
+        except:
+            responce_dict = {
+                'status_code': 500,
+                'status': 'Internal Server Error'
+            }
+            
+            return ({'responce': responce_dict}), 500
