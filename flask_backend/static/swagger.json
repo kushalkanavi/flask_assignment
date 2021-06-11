@@ -1,0 +1,190 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "description": "Kushal Kanavi",
+      "version": "1.0.0",
+      "title": "Kaplan Flask Assignment"
+    },
+    "servers": [
+      {
+        "url": "/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Assignment Request",
+        "description": "API for requesting assignments, create, search by ID, search by Tag"
+      }
+    ],
+    "paths": {
+      "/assignment/": {
+        "get": {
+          "tags": [
+            "Assignment Request"
+          ],
+          "summary": "Returns all assignment",
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Assignment Request"
+          ],
+          "summary": "Create a new assignment request system",
+          "requestBody": {
+            "description": "Assignment Request Post Object",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/assignmentRequestPostBody"
+                }
+              }
+            }
+          },
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "201": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/components/schemas/id"
+              }
+            },
+            "400": {
+              "description": "Failed. Bad post data."
+            }
+          }
+        }
+      },
+      "/assignment/{id}": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the assignment that we want to match",
+            "type": "integer"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Assignment Request"
+          ],
+          "summary": "Get assignment request with given ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "description": "Assignment Request id",
+              "schema": {
+                "$ref": "#/components/schemas/id"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Failed. Misunderstood Request."
+            },
+            "404": {
+              "description": "Failed. Assignment request not found."
+            }
+          }
+        }
+      },
+      "/assignmentbytag/": {
+        "get": {
+          "tags": [
+            "Assignment Request"
+          ],
+          "summary": "Get assignment request with given Tag",
+          "requestBody": {
+            "description": "Assignment Request Post Object",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/assignmentRequest"
+                }
+              }
+            }
+          },
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/components/schemas/assignmentRequest"
+              }
+            },
+            "400": {
+              "description": "Failed. Misunderstood Request."
+            },
+            "404": {
+              "description": "Failed. Assignment request not found."
+            }
+          }
+        }
+      }
+
+    },
+    "components": {
+      "schemas": {
+        "id": {
+          "properties": {
+            "uuid": {
+              "type": "string"
+            }
+          }
+        },
+        "assignmentRequestPostBody": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "format": "string"
+            },
+            "title": {
+              "type": "string",
+              "format": "string"
+            },
+            "description": {
+              "type": "string",
+              "format": "string"
+            },
+            "type": {
+              "type": "string",
+              "format": "string"
+            },
+            "duration": {
+              "type": "string",
+              "format": "string"
+            },
+            "tags": {
+              "type": "list",
+              "format": "string"
+            }
+          }
+        },
+        "assignmentRequest": {
+          "type": "object",
+          "properties": {
+            "tag": {
+              "type": "string",
+              "format": "string"
+            }
+          }
+        }
+      }
+    }
+  }

@@ -31,3 +31,9 @@ Go to flask_backend folder.
 Go to flask_backend folder.
     - docker-compose up
 ```
+
+## For API Documentation
+```
+Api Documentation can be found in, after runnning the Flask Server
+    - http://localhost:5000/swagger/
+```
