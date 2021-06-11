@@ -7,12 +7,13 @@ services:
         ports:
             - 5000:5000
     
-    db:
-        image: mysql
-        # ports: 
-        #     - 3306: 3306
-        environment: 
-            - MYSQL_ROOT_PASSWORD=root
-            - MYSQL_USER=user
-            - MYSQL_PASSWORD=root
-            - MYSQL_DATABASE=flaskdb
+    # db:
+    #     image: mysql:latest
+    #     # restart: always
+    #     environment:
+    #         - MYSQL_ROOT_PASSWORD=root
+    #         - MYSQL_USER=user
+    #         - MYSQL_PASSWORD=root
+    #         - MYSQL_DATABASE=flaskdb
+    #     ports:
+    #         - 3307:3306
