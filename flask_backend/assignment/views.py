@@ -111,21 +111,25 @@ class GetAssignmentByTag(Resource):
                 for tags in tag_query:
                     tag_list.append(tags.id)
                 
+                map_query_list = []
                 for tag in tag_list:
                     map_query = Assignment_Tag_Map.query.filter_by(tag_id=tag).all()
+                    map_query_list.append(map_query)
                 
-                for map in map_query:
-                    assignment_query = Assignment.query.filter_by(id=map.assignment_id).all()
+                assignment_query_list=[]
+                for map in map_query_list:
+                    assignment_query = Assignment.query.filter_by(id=map[0].assignment_id).all()
+                    assignment_query_list.append(assignment_query)
                 
                 responce_dict = {}
                 data_list = []
-                for assignment in assignment_query:
-                    data_list.append({'id': assignment.id,
-                            'name' : assignment.name,
-                            'title': assignment.title,
-                            'description': assignment.description,
-                            'type': assignment.type,
-                            'duration': assignment.duration
+                for assignment in assignment_query_list:
+                    data_list.append({'id': assignment[0].id,
+                            'name' : assignment[0].name,
+                            'title': assignment[0].title,
+                            'description': assignment[0].description,
+                            'type': assignment[0].type,
+                            'duration': assignment[0].duration
                             })
                     responce_dict['data'] = data_list 
                     responce_dict['status_code'] = 200
